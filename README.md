@@ -10,10 +10,9 @@ Use it as you would use `flink-streaming-scala`. Most methods are identical
 ```scala
 import com.ariskk.flink4s.StreamExecutionEnvironment
 
-case class Counter(id: String, count: Int)
-object Counter {
-  implicit val typeInfo = TypeInformation.of(classOf[Counter])
-}
+final case class Counter(id: String, count: Int)
+object Counter:
+  given typeInfo = TypeInformation.of(classOf[Counter])
 
 val items = (1 to 1000).map(x => s"item-${x % 10}")
 
@@ -28,9 +27,8 @@ Or if you want to get fancy:
 ```scala
 import cats.Semigroup
 
-implicit val semigroup = new Semigroup[Counter] {
-  override def combine(x: Counter, y: Counter) = Counter(x.id, x.value + y.value)
-}
+given semigroup: Semigroup[Counter] with
+  def combine(x: Counter, y: Counter) = Counter(x.id, x.value + y.value)
 
 val stream = StreamExecutionEnvironment.fromCollection(items)
   .map(x => Counter(x, 1))
