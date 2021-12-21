@@ -1,7 +1,6 @@
-package `com.ariskk.flink4s`
+package com.ariskk.flink4s
 
 import org.apache.flink.streaming.api.datastream.ConnectedStreams
-
 import org.apache.flink.api.common.state.ValueStateDescriptor
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.common.typeutils.TypeSerializer

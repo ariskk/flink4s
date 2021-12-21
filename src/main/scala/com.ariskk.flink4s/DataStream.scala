@@ -1,4 +1,6 @@
-package `com.ariskk.flink4s`
+package com.ariskk.flink4s
+
+import scala.jdk.CollectionConverters._
 
 import org.apache.flink.api.common.functions.{
   FilterFunction,
@@ -20,13 +22,15 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
   def map[R](f: T => R)(using typeInfo: TypeInformation[R]): DataStream[R] =
     val mapper = new MapFunction[T, R]:
       def map(in: T): R = f(in)
-    DataStream(stream.map(mapper, typeInfo).asInstanceOf[JavaStream[R]])
+    DataStream(stream.map(mapper, typeInfo))
 
   def keyBy[K](f: T => K)(using keyTypeInfo: TypeInformation[K]): KeyedStream[T, K] =
     val keyExtractor = new KeySelector[T, K] with ResultTypeQueryable[K]:
       def getKey(in: T)                                = f(in)
       override def getProducedType: TypeInformation[K] = keyTypeInfo
     KeyedStream(new JavaKeyedStream(stream, keyExtractor, keyTypeInfo))
+
+  def runAndCollect: List[T] = stream.executeAndCollect().asScala.toList
 
 end DataStream
 

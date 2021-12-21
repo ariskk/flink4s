@@ -1,4 +1,4 @@
-package `com.ariskk.flink4s`
+package com.ariskk.flink4s
 
 import org.apache.flink.api.common.functions.ReduceFunction
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction

@@ -1,4 +1,4 @@
-package `com.ariskk.flink4s`
+package com.ariskk.flink4s
 
 import scala.jdk.CollectionConverters._
 
