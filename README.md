@@ -15,7 +15,7 @@ import com.ariskk.flink4s.StreamExecutionEnvironment
 
 final case class Counter(id: String, count: Int)
 object Counter:
-  given typeInfo = TypeInformation.of(classOf[Counter])
+  given typeInfo: TypeInformation[Counter] = TypeInformation.of(classOf[Counter])
 
 val items = (1 to 1000).map(x => s"item-${x % 10}")
 
@@ -39,3 +39,9 @@ val stream = StreamExecutionEnvironment.fromCollection(items)
   .combine
 ```
 
+### Caveats
+
+There is a number of features found in `flink-streaming-scala` that is (intentionally) missing:
+- No automatic derivation of `TypeInformation` instances via macros. Compile times scale very poorly as codebase sizes increase.
+This means that some custom serializers Flink provides won't be used. For more context, check [this](https://medium.com/drivetribe-engineering/towards-achieving-a-10x-compile-time-improvement-in-a-flink-codebase-a69596edcb50).
+- No closure cleaner. It is very hard to implement and generally imperfect. If all stream processing logic lives in `object`s, then there is no need for a closure cleaner in the first place.
