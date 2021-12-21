@@ -26,4 +26,10 @@ final case class KeyedStream[T, K](stream: JavaKeyedStream[T, K])(using
 
   def combine(using semi: Semigroup[T]): DataStream[T] = reduce(semi.combine)
 
+  def connect[T2, K2](otherKeyedStream: KeyedStream[T2, K2])(using
+      tTypeInfo: TypeInformation[T2],
+      kTypeInfo: TypeInformation[K2]
+  ): ConnectedStreams[T, T2] =
+    ConnectedStreams(stream.connect(otherKeyedStream.stream))
+
 end KeyedStream

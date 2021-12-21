@@ -9,6 +9,7 @@ import org.apache.flink.streaming.api.datastream.{
   ConnectedStreams => JavaCStreams,
   DataStream => JavaStream
 }
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable
 
 final case class ConnectedStreams[A, B](streams: JavaCStreams[A, B]):
 
@@ -17,7 +18,7 @@ final case class ConnectedStreams[A, B](streams: JavaCStreams[A, B]):
       f2: (B, S) => (O, S),
       emptyState: S
   )(using stateTypeInfo: TypeInformation[S], outTypeInfo: TypeInformation[O]): DataStream[O] =
-    val biMapper = new RichCoMapFunction[A, B, O]:
+    val biMapper = new RichCoMapFunction[A, B, O] with ResultTypeQueryable[O]:
       lazy val serializer: TypeSerializer[S] =
         stateTypeInfo.createSerializer(getRuntimeContext.getExecutionConfig)
       lazy val stateDescriptor = new ValueStateDescriptor[S]("name", serializer)
@@ -31,6 +32,8 @@ final case class ConnectedStreams[A, B](streams: JavaCStreams[A, B]):
       override def map1(in: A): O = map[A](in, f1)
 
       override def map2(in: B): O = map[B](in, f2)
+
+      override def getProducedType: TypeInformation[O] = outTypeInfo
 
     end biMapper
     DataStream(streams.map(biMapper))
