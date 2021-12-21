@@ -3,7 +3,7 @@ package com.ariskk.flink4s
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
-import com.ariskk.flink4s.TypeInfo.intTypeInfo
+import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
 
 final class DataStreamSpec extends AnyFunSpec with Matchers:
 
@@ -28,6 +28,13 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       val range   = (1 to 10).toList
       val results = env.fromCollection(range).filter(_ > 5).runAndCollect
       results should equal((6 to 10).toList)
+    }
+
+    it("should collect data") {
+      val env     = FlinkExecutor.newEnv(parallelism = 1)
+      val range   = (1 to 10).toList
+      val results = env.fromCollection(range).collect { case x if x > 5 => s"$x" }.runAndCollect
+      results should equal((6 to 10).map(_.toString).toList)
     }
   }
 
