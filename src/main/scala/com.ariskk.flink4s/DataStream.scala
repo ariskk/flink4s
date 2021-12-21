@@ -24,6 +24,11 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
       def map(in: T): R = f(in)
     DataStream(stream.map(mapper, typeInfo))
 
+  def filter(f: T => Boolean): DataStream[T] =
+    val filter = new FilterFunction[T]:
+      def filter(t: T): Boolean = f(t)
+    DataStream(stream.filter(filter))
+
   def keyBy[K](f: T => K)(using keyTypeInfo: TypeInformation[K]): KeyedStream[T, K] =
     val keyExtractor = new KeySelector[T, K] with ResultTypeQueryable[K]:
       def getKey(in: T)                                = f(in)
