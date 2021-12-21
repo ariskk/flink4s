@@ -6,11 +6,17 @@ resolvers ++= Seq(mavenSnapshots)
 
 val flinkLibs = Seq(
    "org.apache.flink" % "flink-streaming-java" % "1.15-20211220.013854-53" % "provided",
-   "org.apache.flink" % "flink-core" % "1.15-20211220.013543-146" % "provided"
+   "org.apache.flink" % "flink-core" % "1.15-20211220.013543-146" % "provided",
+   "org.apache.flink" % "flink-statebackend-rocksdb" % "1.15-20211221.010343-54",
+   "org.apache.flink" % "flink-test-utils" % "1.15-20211221.010354-54" % Test
 )
 
 val otherLibs = Seq(
   "org.typelevel" %% "cats-core" % "2.7.0"
+)
+
+val testingLibs = Seq(
+  "org.scalatest" %% "scalatest" % "3.2.10" % Test,
 )
 
 lazy val root = project
@@ -21,5 +27,5 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies ++= flinkLibs ++ otherLibs
+    libraryDependencies ++= flinkLibs ++ otherLibs ++ testingLibs
   )
