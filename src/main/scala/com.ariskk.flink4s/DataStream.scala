@@ -16,13 +16,21 @@ import org.apache.flink.streaming.api.datastream.{
 }
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable
+import org.apache.flink.util.Collector
 
 final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInformation[T]):
 
   def map[R](f: T => R)(using typeInfo: TypeInformation[R]): DataStream[R] =
-    val mapper = new MapFunction[T, R]:
-      def map(in: T): R = f(in)
+    val mapper = new MapFunction[T, R] with ResultTypeQueryable[R]:
+      def map(in: T): R                                = f(in)
+      override def getProducedType: TypeInformation[R] = typeInfo
     DataStream(stream.map(mapper, typeInfo))
+
+  def flatMap[R](f: T => IterableOnce[R])(using typeInfo: TypeInformation[R]): DataStream[R] =
+    val flatMapper = new FlatMapFunction[T, R] with ResultTypeQueryable[R]:
+      def flatMap(in: T, out: Collector[R])            = f(in).foreach(out.collect)
+      override def getProducedType: TypeInformation[R] = typeInfo
+    DataStream(stream.flatMap(flatMapper))
 
   def filter(f: T => Boolean): DataStream[T] =
     val filter = new FilterFunction[T]:
