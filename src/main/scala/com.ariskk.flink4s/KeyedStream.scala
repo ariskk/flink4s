@@ -22,7 +22,7 @@ final case class KeyedStream[T, K](stream: JavaKeyedStream[T, K])(using
   def reduce(f: (T, T) => T): DataStream[T] =
     val reducer = new ReduceFunction[T]:
       def reduce(v1: T, v2: T): T = f(v1, v2)
-    DataStream(stream.reduce(reducer).asInstanceOf[JavaStream[T]])
+    DataStream(stream.reduce(reducer))
 
   def combine(using semi: Semigroup[T]): DataStream[T] = reduce(semi.combine)
 

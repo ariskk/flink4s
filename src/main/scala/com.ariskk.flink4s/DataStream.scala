@@ -9,7 +9,8 @@ import org.apache.flink.api.common.functions.{
 import org.apache.flink.api.java.functions.KeySelector
 import org.apache.flink.streaming.api.datastream.{
   DataStream => JavaStream,
-  KeyedStream => JavaKeyedStream
+  KeyedStream => JavaKeyedStream,
+  SingleOutputStreamOperator
 }
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable
@@ -28,3 +29,7 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
     KeyedStream(new JavaKeyedStream(stream, keyExtractor, keyTypeInfo))
 
 end DataStream
+
+object DataStream:
+  def apply[T: TypeInformation](stream: SingleOutputStreamOperator[T]): DataStream[T] =
+    new DataStream[T](stream.asInstanceOf[JavaStream[T]])
