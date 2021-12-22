@@ -4,7 +4,7 @@
 ![CI](https://github.com/ariskk/flink4s/workflows/CI/badge.svg)
 
 Scala 3.x wrapper for Apache Flink. Scala is not a priority for the core project, and thus support for the latest versions of Scala is missing.
-This projects attempts to leverage the upcoming Scala-free 1.15 release to provide a viable wrapper for Scala 3.x.
+This project attempts to leverage the upcoming Scala-free 1.15 release to provide a viable wrapper for Scala 3.x.
 
 ### Usage
 
