@@ -36,6 +36,15 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       val results = env.fromCollection(range).collect { case x if x > 5 => s"$x" }.runAndCollect
       results should equal((6 to 10).map(_.toString).toList)
     }
+
+    it("should union homogeneous streams") {
+      val env     = FlinkExecutor.newEnv(parallelism = 1)
+      val stream1 = env.fromCollection((1 to 10).toList)
+      val stream2 = env.fromCollection((11 to 20).toList)
+      val stream3 = env.fromCollection((21 to 30).toList)
+      val results = stream1.union(stream2, stream3).runAndCollect
+      results should contain theSameElementsAs ((1 to 30).toList)
+    }
   }
 
 end DataStreamSpec

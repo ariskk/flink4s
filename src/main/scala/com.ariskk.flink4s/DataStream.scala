@@ -46,6 +46,9 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
       override def getProducedType: TypeInformation[K] = keyTypeInfo
     KeyedStream(new JavaKeyedStream(stream, keyExtractor, keyTypeInfo))
 
+  def union(dataStreams: DataStream[T]*): DataStream[T] =
+    DataStream(stream.union(dataStreams.map(_.stream): _*))
+
   def runAndCollect: List[T] = stream.executeAndCollect().asScala.toList
 
 end DataStream
