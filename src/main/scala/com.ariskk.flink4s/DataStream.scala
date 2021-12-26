@@ -37,6 +37,8 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
       def filter(t: T): Boolean = f(t)
     DataStream(stream.filter(filter))
 
+  def filterNot(f: T => Boolean): DataStream[T] = filter(!f(_))
+
   def collect[R](pf: PartialFunction[T, R])(using typeInfo: TypeInformation[R]): DataStream[R] =
     filter(pf.isDefinedAt _).map(pf)
 

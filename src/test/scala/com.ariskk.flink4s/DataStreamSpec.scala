@@ -30,6 +30,13 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       results should equal((6 to 10).toList)
     }
 
+    it("should filter out data") {
+      val env     = FlinkExecutor.newEnv(parallelism = 1)
+      val range   = (1 to 10).toList
+      val results = env.fromCollection(range).filterNot(_ > 5).runAndCollect
+      results should equal((1 to 5).toList)
+    }
+
     it("should collect data") {
       val env     = FlinkExecutor.newEnv(parallelism = 1)
       val range   = (1 to 10).toList
