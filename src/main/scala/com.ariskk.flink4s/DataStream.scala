@@ -18,6 +18,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable
 import org.apache.flink.util.Collector
 import org.apache.flink.streaming.api.datastream.DataStreamSink
+import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInformation[T]):
 
@@ -51,6 +52,9 @@ final case class DataStream[T](stream: JavaStream[T])(using typeInfo: TypeInform
 
   def union(dataStreams: DataStream[T]*): DataStream[T] =
     DataStream(stream.union(dataStreams.map(_.stream): _*))
+
+  def addSink(sinkFunction: SinkFunction[T]): DataStreamSink[T] =
+    stream.addSink(sinkFunction)
 
   def runAndCollect: List[T] = stream.executeAndCollect().asScala.toList
 

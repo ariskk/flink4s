@@ -1,9 +1,13 @@
 package com.ariskk.flink4s
 
+import scala.collection.mutable.{Buffer => MutableBuffer}
+
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
+import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
+import javax.xml.crypto.Data
 
 final class DataStreamSpec extends AnyFunSpec with Matchers:
 
@@ -52,6 +56,21 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       val results = stream1.union(stream2, stream3).runAndCollect
       results should contain theSameElementsAs ((1 to 30).toList)
     }
+
+    it("should be able to accept sinks") {
+      val env      = FlinkExecutor.newEnv(parallelism = 1)
+      val elements = (1 to 10).toList
+      val stream   = env.fromCollection(elements)
+      stream.addSink(DataStreamSpec.intCollector)
+      env.execute()
+      DataStreamSpec.values.toList should equal(elements)
+    }
   }
 
 end DataStreamSpec
+
+object DataStreamSpec:
+  val values: MutableBuffer[Int] = MutableBuffer()
+  def intCollector = new SinkFunction[Int]:
+    override def invoke(value: Int): Unit =
+      synchronized(values.addOne(value))
