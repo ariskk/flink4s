@@ -11,6 +11,7 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.streaming.api.graph.StreamGraph
 import org.apache.flink.streaming.api.functions.source.SourceFunction
+import org.apache.flink.api.common.JobExecutionResult
 
 final case class StreamExecutionEnvironment(javaEnv: JavaEnv):
 
@@ -29,6 +30,8 @@ final case class StreamExecutionEnvironment(javaEnv: JavaEnv):
 
   def addSource[T](function: SourceFunction[T])(using typeInfo: TypeInformation[T]): DataStream[T] =
     DataStream(javaEnv.addSource(function, typeInfo))
+
+  def execute(): JobExecutionResult = javaEnv.execute()
 
 end StreamExecutionEnvironment
 
