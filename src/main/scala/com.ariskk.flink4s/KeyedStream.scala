@@ -11,6 +11,7 @@ import org.apache.flink.api.common.state.ValueStateDescriptor
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.api.common.typeutils.TypeSerializer
 import org.apache.flink.util.Collector
+import org.apache.flink.streaming.api.windowing.windows.GlobalWindow
 import cats.Semigroup
 import cats.Monoid
 
@@ -31,5 +32,8 @@ final case class KeyedStream[T, K](stream: JavaKeyedStream[T, K])(using
       kTypeInfo: TypeInformation[K2]
   ): ConnectedStreams[T, T2] =
     ConnectedStreams(stream.connect(otherKeyedStream.stream))
+
+  def countWindow(size: Long): WindowedStream[T, K, GlobalWindow] =
+    WindowedStream(stream.countWindow(size))
 
 end KeyedStream

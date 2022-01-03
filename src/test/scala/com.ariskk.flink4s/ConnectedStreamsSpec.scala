@@ -37,7 +37,7 @@ final class ConnectedStreamsSpec extends AnyFunSpec with Matchers:
         )
 
       val results = stream.runAndCollect.groupBy(_._1).mapValues(_.last._2)
-      println(results.values)
+      results.values.toList.forall(_ == State(10, 20)) shouldBe true
 
     }
   }
