@@ -36,4 +36,7 @@ final case class KeyedStream[T, K](stream: JavaKeyedStream[T, K])(using
   def countWindow(size: Long): WindowedStream[T, K, GlobalWindow] =
     WindowedStream(stream.countWindow(size))
 
+  def countWindow(size: Long, slide: Long): WindowedStream[T, K, GlobalWindow] =
+    WindowedStream(stream.countWindow(size, slide))
+
 end KeyedStream

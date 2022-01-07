@@ -28,6 +28,19 @@ final class WindowedStreamSpec extends AnyFunSpec with Matchers:
       results should contain theSameElementsAs (Seq(firstOdds, secondOdds, firstEvens, secondEvens))
 
     }
+
+    it("should apply reducers to count windows with slide") {
+      val env    = FlinkExecutor.newEnv(parallelism = 1)
+      val stream = env.fromCollection((1 to 200).toList.map(_ => 1))
+      val results = stream
+        .keyBy(identity)
+        .countWindow(100, 50)
+        .reduce(_ + _)
+        .runAndCollect
+
+      results.size should equal(4)
+      results shouldBe List(50, 100, 100, 100)
+    }
   }
 
 end WindowedStreamSpec
