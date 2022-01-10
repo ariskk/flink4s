@@ -5,10 +5,10 @@ lazy val mavenSnapshots = "apache.snapshots" at "https://repository.apache.org/c
 resolvers ++= Seq(mavenSnapshots)
 
 val flinkLibs = Seq(
-   "org.apache.flink" % "flink-streaming-java" % "1.15-20211220.013854-53" % "provided",
-   "org.apache.flink" % "flink-core" % "1.15-20211220.013543-146" % "provided",
-   "org.apache.flink" % "flink-statebackend-rocksdb" % "1.15-20211221.010343-54",
-   "org.apache.flink" % "flink-test-utils" % "1.15-20211221.010354-54" % Test
+   "org.apache.flink" % "flink-streaming-java" % "1.15-20220115.010217-79" % "provided",
+   "org.apache.flink" % "flink-core" % "1.15-20220115.005917-172" % "provided",
+   "org.apache.flink" % "flink-statebackend-rocksdb" % "1.15-20220115.010305-79",
+   "org.apache.flink" % "flink-test-utils" % "1.15-20220115.010320-79" % Test
 )
 
 val otherLibs = Seq(
