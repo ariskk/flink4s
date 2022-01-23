@@ -1,4 +1,4 @@
-val scala3Version = "3.1.0"
+val scala3Version = "3.1.1"
 
 lazy val mavenSnapshots = "apache.snapshots" at "https://repository.apache.org/content/groups/snapshots"
 
