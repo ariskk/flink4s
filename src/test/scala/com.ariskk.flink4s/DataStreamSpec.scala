@@ -7,7 +7,6 @@ import org.scalatest.matchers.should.Matchers
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
-import javax.xml.crypto.Data
 
 final class DataStreamSpec extends AnyFunSpec with Matchers:
 
@@ -62,7 +61,7 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       val elements = (1 to 10).toList
       val stream   = env.fromCollection(elements)
       stream.addSink(DataStreamSpec.intCollector)
-      env.execute()
+      env.execute
       DataStreamSpec.values.toList should equal(elements)
     }
   }
