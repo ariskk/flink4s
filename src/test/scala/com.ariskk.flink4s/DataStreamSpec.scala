@@ -1,6 +1,8 @@
 package com.ariskk.flink4s
 
 import scala.collection.mutable.{Buffer => MutableBuffer}
+import scala.concurrent.Future
+import concurrent.ExecutionContext.Implicits.global
 
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -63,6 +65,29 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
       stream.addSink(DataStreamSpec.intCollector)
       env.execute
       DataStreamSpec.values.toList should equal(elements)
+    }
+
+    it("should execute async functions and return the results in order") {
+      val env      = FlinkExecutor.newEnv(parallelism = 1)
+      val elements = (1 to 20).toList
+      val results = env
+        .fromCollection(elements)
+        .orderedMapAsync(x => Future(x + 1))
+        .runAndCollect
+
+      results should equal((2 to 21).toList)
+
+    }
+
+    it("should execute async functions and return the results in any order") {
+      val env      = FlinkExecutor.newEnv(parallelism = 1)
+      val elements = (1 to 20).toList
+      val results = env
+        .fromCollection(elements)
+        .unorderedMapAsync(x => Future(x + 1))
+        .runAndCollect
+      results should contain theSameElementsAs ((2 to 21).toList)
+
     }
   }
 
