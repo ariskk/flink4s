@@ -1,5 +1,7 @@
 val scala3Version = "3.1.1"
 
+val supportedScalaVersions = List(scala3Version)
+
 lazy val mavenSnapshots = "apache.snapshots" at "https://repository.apache.org/content/groups/snapshots"
 
 resolvers ++= Seq(mavenSnapshots)
@@ -24,5 +26,51 @@ lazy val root = project
   .settings(
     name := "flink4s",
     scalaVersion := scala3Version,
-    libraryDependencies ++= flinkLibs ++ otherLibs ++ testingLibs
+    libraryDependencies ++= flinkLibs ++ otherLibs ++ testingLibs,
+    publishingSettings
   )
+
+import ReleaseTransformations._
+
+lazy val publishingSettings = Seq(
+  organization := "com.ariskk",
+  organizationName := "ariskk",
+  organizationHomepage := Some(url("http://ariskk.com/")),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/ariskk/flink4s"),
+      "scm:git@github.com:ariskk/flink4s.git"
+    )
+  ),
+  developers := List(
+    Developer(
+      id    = "ariskk",
+      name  = "Aris Koliopoulos",
+      email = "aris@ariskk.com",
+      url   = url("http://ariskk.com")
+    )
+  ),
+  description := "Scala 3 wrapper for Apache Flink",
+  licenses := List("MIT" -> new URL("http://opensource.org/licenses/MIT")),
+  homepage := Some(url("https://github.com/ariskk/flink4s")),
+  pomIncludeRepository := { _ => false },
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+    else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  },
+  publishMavenStyle := true,
+  releaseProcess := Seq[ReleaseStep](
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    publishArtifacts,
+    setNextVersion,
+    commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    pushChanges
+  )
+)
