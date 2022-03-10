@@ -8,6 +8,14 @@ This project attempts to leverage the upcoming Scala-free 1.15 release to provid
 
 ### Usage
 
+In your `build.sbt`, add
+
+```scala
+libraryDependencies ++= Seq(
+  "com.ariskk" %% "flink4s" % "1.15.0"
+)
+```
+
 Use it as you would use `flink-streaming-scala`. Most methods are identical
 
 ```scala
