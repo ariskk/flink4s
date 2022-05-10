@@ -8,7 +8,7 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
 
-final class WindowedStreamSpec extends AnyFunSpec with Matchers:
+final class WindowedStreamSpec extends AnyFunSpec with Matchers {
 
   describe("WindowedStream") {
     it("should apply reducers to count windows") {
@@ -43,4 +43,4 @@ final class WindowedStreamSpec extends AnyFunSpec with Matchers:
     }
   }
 
-end WindowedStreamSpec
+}

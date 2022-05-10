@@ -7,7 +7,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation
 import TypeInfo.stringTypeInfo
 import ConnectedStreamsSpec.State
 
-final class ConnectedStreamsSpec extends AnyFunSpec with Matchers:
+final class ConnectedStreamsSpec extends AnyFunSpec with Matchers {
 
   describe("ConnectedStreams") {
 
@@ -42,14 +42,16 @@ final class ConnectedStreamsSpec extends AnyFunSpec with Matchers:
     }
   }
 
-end ConnectedStreamsSpec
+}
 
-object ConnectedStreamsSpec:
+object ConnectedStreamsSpec {
   final case class State(fooCount: Int, barCount: Int) {
     lazy val incrementFoo = State(fooCount + 1, barCount)
     lazy val incrementBar = State(fooCount, barCount + 1)
   }
 
-  given stateTypeInfo: TypeInformation[State] = TypeInformation.of(classOf[State])
-  given keyedTypeInfo: TypeInformation[(String, State)] =
+  implicit val stateTypeInfo: TypeInformation[State] = TypeInformation.of(classOf[State])
+  implicit val keyedTypeInfo: TypeInformation[(String, State)] =
     TypeInformation.of(classOf[(String, State)])
+
+}

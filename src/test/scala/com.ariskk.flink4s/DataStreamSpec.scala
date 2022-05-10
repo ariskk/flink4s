@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
 
-final class DataStreamSpec extends AnyFunSpec with Matchers:
+final class DataStreamSpec extends AnyFunSpec with Matchers {
 
   describe("DataStreamSpec") {
     it("should map data") {
@@ -91,10 +91,13 @@ final class DataStreamSpec extends AnyFunSpec with Matchers:
     }
   }
 
-end DataStreamSpec
+}
 
-object DataStreamSpec:
+object DataStreamSpec {
   val values: MutableBuffer[Int] = MutableBuffer()
-  def intCollector = new SinkFunction[Int]:
+  def intCollector = new SinkFunction[Int] {
     override def invoke(value: Int): Unit =
       synchronized(values.addOne(value))
+  }
+
+}

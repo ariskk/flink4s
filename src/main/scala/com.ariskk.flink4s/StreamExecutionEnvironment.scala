@@ -17,35 +17,41 @@ import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.streaming.api.TimeCharacteristic
 
-final case class StreamExecutionEnvironment(javaEnv: JavaEnv):
+final case class StreamExecutionEnvironment(javaEnv: JavaEnv) {
 
   def getStreamGraph: StreamGraph = javaEnv.getStreamGraph
 
-  def setParallelism(n: Int): StreamExecutionEnvironment =
+  def setParallelism(n: Int): StreamExecutionEnvironment = {
     javaEnv.setParallelism(n)
     StreamExecutionEnvironment(javaEnv)
+  }
 
-  def setStateBackend(backend: StateBackend): StreamExecutionEnvironment =
+  def setStateBackend(backend: StateBackend): StreamExecutionEnvironment = {
     javaEnv.setStateBackend(backend)
     StreamExecutionEnvironment(javaEnv)
+  }
 
-  def fromCollection[T](data: Seq[T])(using typeInfo: TypeInformation[T]): DataStream[T] =
+  def fromCollection[T](data: Seq[T])(implicit typeInfo: TypeInformation[T]): DataStream[T] =
     DataStream(javaEnv.fromCollection(data.asJava, typeInfo))
 
-  def addSource[T](function: SourceFunction[T])(using typeInfo: TypeInformation[T]): DataStream[T] =
+  def addSource[T](function: SourceFunction[T])(implicit
+      typeInfo: TypeInformation[T]
+  ): DataStream[T] =
     DataStream(javaEnv.addSource(function, typeInfo))
 
   def setStreamTimeCharacteristic(
       timeCharacteristic: TimeCharacteristic
-  ): StreamExecutionEnvironment =
+  ): StreamExecutionEnvironment = {
     javaEnv.setStreamTimeCharacteristic(timeCharacteristic)
     StreamExecutionEnvironment(javaEnv)
+  }
 
   def setRestartStrategy(
       restartStrategy: RestartStrategies.RestartStrategyConfiguration
-  ): StreamExecutionEnvironment =
+  ): StreamExecutionEnvironment = {
     javaEnv.setRestartStrategy(restartStrategy)
     StreamExecutionEnvironment(javaEnv)
+  }
 
   def enableCheckpointing(interval: Duration, mode: CheckpointingMode): StreamExecutionEnvironment =
     StreamExecutionEnvironment(javaEnv.enableCheckpointing(interval.toMillis, mode))
@@ -54,8 +60,9 @@ final case class StreamExecutionEnvironment(javaEnv: JavaEnv):
 
   def getCheckpointConfig: CheckpointConfig = javaEnv.getCheckpointConfig
 
-end StreamExecutionEnvironment
+}
 
-object StreamExecutionEnvironment:
+object StreamExecutionEnvironment {
   def getExecutionEnvironment: StreamExecutionEnvironment =
     StreamExecutionEnvironment(JavaEnv.getExecutionEnvironment())
+}

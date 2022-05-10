@@ -1,4 +1,5 @@
-val scala3Version = "3.1.1"
+val scala213Version = "2.13.8"
+val scala3Version = "3.1.2"
 
 val supportedScalaVersions = List(scala3Version)
 
@@ -10,7 +11,7 @@ val flinkVersion = "1.15.0"
 
 val flinkLibs = Seq(
    "org.apache.flink" % "flink-streaming-java" % flinkVersion % "provided",
-   "org.apache.flink" % "flink-core" %flinkVersion % "provided",
+   "org.apache.flink" % "flink-core" % flinkVersion % "provided",
    "org.apache.flink" % "flink-statebackend-rocksdb" % flinkVersion,
    "org.apache.flink" % "flink-test-utils" % flinkVersion % Test
 )
@@ -28,6 +29,7 @@ lazy val root = project
   .settings(
     name := "flink4s",
     scalaVersion := scala3Version,
+    crossScalaVersions := Seq(scala3Version, scala213Version),
     libraryDependencies ++= flinkLibs ++ otherLibs ++ testingLibs,
     publishingSettings
   )
@@ -55,7 +57,6 @@ lazy val publishingSettings = Seq(
   description := "Scala 3 wrapper for Apache Flink",
   licenses := List("MIT" -> new URL("http://opensource.org/licenses/MIT")),
   homepage := Some(url("https://github.com/ariskk/flink4s")),
-  pomIncludeRepository := { _ => false },
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")

@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/ariskk/flink4s/blob/main/LICENSE)
 ![CI](https://github.com/ariskk/flink4s/workflows/CI/badge.svg)
 
-Scala 3.x wrapper for Apache Flink. Scala is not a priority for the core project, and thus support for the latest versions of Scala is missing.
-This project attempts to leverage the upcoming Scala-free 1.15 release to provide a viable wrapper for Scala 3.x.
+Scala 2.13 and 3.x wrapper for Apache Flink. Scala is not a priority for the core project, and thus support for the latest versions of Scala is missing.
+This project attempts to leverage the Scala-free 1.15 release to provide a viable wrapper for Scala 2.13 and 3.x.
 
 ### Usage
 
@@ -12,9 +12,11 @@ In your `build.sbt`, add
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.ariskk" %% "flink4s" % "1.15.0"
+  "com.ariskk" %% "flink4s" % "1.15.1"
 )
 ```
+
+Note: Major and minor versions follow Flink releases. Patches are independent.
 
 Use it as you would use `flink-streaming-scala`. Most methods are identical
 

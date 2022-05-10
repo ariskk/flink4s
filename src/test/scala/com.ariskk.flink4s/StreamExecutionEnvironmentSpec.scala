@@ -8,7 +8,7 @@ import org.apache.flink.streaming.api.CheckpointingMode
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 
-final class StreamExecutionEnvironmentSpec extends AnyFunSpec with Matchers:
+final class StreamExecutionEnvironmentSpec extends AnyFunSpec with Matchers {
 
   describe("StreamExecutionEnvironment") {
     it("should have an option to enable checkpointing") {
@@ -31,4 +31,4 @@ final class StreamExecutionEnvironmentSpec extends AnyFunSpec with Matchers:
     }
   }
 
-end StreamExecutionEnvironmentSpec
+}
