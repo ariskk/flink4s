@@ -10,8 +10,8 @@ resolvers ++= Seq(mavenSnapshots)
 val flinkVersion = "1.15.0"
 
 val flinkLibs = Seq(
-   "org.apache.flink" % "flink-streaming-java" % flinkVersion % "provided",
-   "org.apache.flink" % "flink-core" % flinkVersion % "provided",
+   "org.apache.flink" % "flink-streaming-java" % flinkVersion,
+   "org.apache.flink" % "flink-core" % flinkVersion,
    "org.apache.flink" % "flink-statebackend-rocksdb" % flinkVersion,
    "org.apache.flink" % "flink-test-utils" % flinkVersion % Test
 )

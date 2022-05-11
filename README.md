@@ -12,7 +12,7 @@ In your `build.sbt`, add
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.ariskk" %% "flink4s" % "1.15.1"
+  "com.ariskk" %% "flink4s" % "1.15.2"
 )
 ```
 
