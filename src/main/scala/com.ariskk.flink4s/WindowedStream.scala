@@ -18,7 +18,7 @@ final case class WindowedStream[T, K, W <: Window](stream: JavaWStream[T, K, W])
     DataStream(stream.reduce(reducer))
   }
 
-  def aggregate[A, O](f: (A, T) => A)(outF: A => O)(implicit monoid: Monoid[A], aggTypeInfo: TypeInformation[A],
+  def aggregate[A, O](f: (A, T) => A)(outF: A => O)(implicit monoid: Monoid[A], aggTypeInformation: TypeInformation[A],
                                                     typeInformation: TypeInformation[O]): DataStream[O] = {
     val reducer = new AggregateFunction[T, A, O] {
 
@@ -31,7 +31,7 @@ final case class WindowedStream[T, K, W <: Window](stream: JavaWStream[T, K, W])
       override def merge(a: A, b: A): A = Semigroup
         .combine(a, b)
     }
-    DataStream(stream.aggregate[A,O](reducer, aggTypeInfo, typeInformation))(typeInformation)
+    DataStream(stream.aggregate[A,O](reducer, aggTypeInformation, typeInformation))(typeInformation)
   }
 
 }
