@@ -1,11 +1,12 @@
 package com.ariskk.flink4s
 
-import scala.collection.mutable.{Buffer => MutableBuffer}
+import cats.Monoid
+import cats.kernel.Semigroup
 
+import scala.collection.mutable.{Buffer => MutableBuffer}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
-
 import com.ariskk.flink4s.TypeInfo.{intTypeInfo, stringTypeInfo}
 
 final class WindowedStreamSpec extends AnyFunSpec with Matchers {
@@ -69,17 +70,24 @@ final class WindowedStreamSpec extends AnyFunSpec with Matchers {
       results shouldBe List("50", "100", "100", "100")
     }
 
-    it("should apply aggregation if aggregator and out are different types") {
+    it("should apply aggregation based on Monoid") {
       val env = FlinkExecutor.newEnv(parallelism = 1)
       val stream = env.fromCollection((1 to 200).toList.map(_ => 1))
+      implicit val semigroup = new Monoid[Int] {
+
+        override def empty: Int = 5
+
+        override def combine(x: Int, y: Int): Int = x + y
+      }
+
       val results = stream
         .keyBy(identity)
         .countWindow(100, 50)
-        .aggregate[Int, String]((agg, i) => agg + i)(_.toString)
+        .aggregate[Int, Int]((agg, i) => agg + i)(identity(_))
         .runAndCollect
 
       results.size should equal(4)
-      results shouldBe List("50", "100", "100", "100")
+      results shouldBe List(55, 105, 105, 105)
     }
   }
 
