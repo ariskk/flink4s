@@ -1,10 +1,10 @@
 package com.ariskk.flink4s
 
 import scala.util.Random
-
 import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration
 import org.apache.flink.test.util.MiniClusterWithClientResource
 import org.apache.flink.contrib.streaming.state.RocksDBStateBackend
+import org.apache.flink.runtime.state.hashmap.HashMapStateBackend
 
 object FlinkExecutor {
 
@@ -25,7 +25,7 @@ object FlinkExecutor {
   def newEnv(parallelism: Int = 2): StreamExecutionEnvironment = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.setParallelism(parallelism)
-    val rocks = new RocksDBStateBackend(s"file:///tmp/flink-${Random.nextString(10)}")
+    val rocks = new HashMapStateBackend()
     env.setStateBackend(rocks)
     env
   }
