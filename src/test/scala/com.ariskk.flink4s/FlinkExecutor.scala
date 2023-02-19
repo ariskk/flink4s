@@ -1,10 +1,10 @@
 package com.ariskk.flink4s
 
 import scala.util.Random
-
 import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration
 import org.apache.flink.test.util.MiniClusterWithClientResource
 import org.apache.flink.contrib.streaming.state.RocksDBStateBackend
+import org.apache.flink.runtime.state.hashmap.HashMapStateBackend
 
 object FlinkExecutor {
 
