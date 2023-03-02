@@ -32,7 +32,8 @@ lazy val root = project
     scalaVersion       := scala3Version,
     crossScalaVersions := Seq(scala3Version, scala213Version),
     libraryDependencies ++= flinkLibs ++ otherLibs ++ testingLibs,
-    publishingSettings
+    publishingSettings,
+    Test / parallelExecution := false
   )
 
 import ReleaseTransformations._
